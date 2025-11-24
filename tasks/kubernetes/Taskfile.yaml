@@ -1,0 +1,82 @@
+version: '3'
+
+tasks:
+  sync:
+    desc: Deploy/sync all Kubernetes applications
+    summary: |
+      Deploys all applications defined in helmfile.yaml to the cluster.
+
+      Usage:
+        task k8s:sync           # Deploy to lab-01 (default)
+        task k8s:sync ENV=prod  # Deploy to production
+
+      This is declarative - it will install or upgrade releases as needed.
+    dir: kubernetes
+    cmds:
+      - helmfile -e {{.ENV | default "lab-01"}} sync
+
+  diff:
+    desc: Show what would change
+    summary: |
+      Shows differences between current state and desired state.
+      Run this before sync to see what will change.
+
+      Usage:
+        task k8s:diff
+    dir: kubernetes
+    cmds:
+      - helmfile -e {{.ENV | default "lab-01"}} diff
+
+  list:
+    desc: List all releases
+    summary: |
+      Shows all Helm releases managed by helmfile.
+
+      Usage:
+        task k8s:list
+    dir: kubernetes
+    cmds:
+      - helmfile -e {{.ENV | default "lab-01"}} list
+
+  destroy:
+    desc: Remove all applications
+    summary: |
+      Removes all applications deployed via helmfile.
+      Use with caution!
+
+      Usage:
+        task k8s:destroy
+    dir: kubernetes
+    cmds:
+      - helmfile -e {{.ENV | default "lab-01"}} destroy
+
+  template:
+    desc: Render templates without applying
+    summary: |
+      Shows the final rendered YAML that would be applied.
+      Useful for debugging and validation.
+
+      Usage:
+        task k8s:template
+    dir: kubernetes
+    cmds:
+      - helmfile -e {{.ENV | default "lab-01"}} template
+
+  status:
+    desc: Check status of all releases
+    summary: |
+      Shows the status of all deployed releases.
+
+      Usage:
+        task k8s:status
+    cmds:
+      - kubectl get pods -A
+      - echo ""
+      - echo "Storage Classes:"
+      - kubectl get storageclass
+      - echo ""
+      - echo "Persistent Volumes:"
+      - kubectl get pv
+      - echo ""
+      - echo "n8n Service:"
+      - kubectl get svc -n n8n

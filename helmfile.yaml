@@ -1,0 +1,27 @@
+repositories:
+  - name: sealed-secrets
+    url: https://bitnami-labs.github.io/sealed-secrets
+  - name: argo
+    url: https://argoproj.github.io/argo-helm
+
+releases:
+  - name: sealed-secrets
+    namespace: sealed-secrets
+    createNamespace: true
+    chart: sealed-secrets/sealed-secrets
+    version: 2.17.9
+    wait: true
+    timeout: 300
+    values:
+      - infrastructure/sealed-secrets/values.yaml
+
+  - name: argocd
+    namespace: argocd
+    createNamespace: true
+    chart: argo/argo-cd
+    version: 9.1.3
+    wait: true
+    timeout: 600
+    values:
+      - infrastructure/argocd/values.yaml
+

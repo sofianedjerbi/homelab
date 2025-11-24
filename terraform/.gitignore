@@ -1,0 +1,17 @@
+# Terraform
+.terraform/
+.terragrunt-cache/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform.lock.hcl
+
+# Sensitive outputs
+talosconfig
+kubeconfig
+*.kubeconfig
+*.talosconfig
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,33 @@
+{
+  "packages": [
+    "go-task@latest",
+    "kubectl@latest",
+    "kubernetes-helm@latest",
+    "helmfile@latest",
+    "talosctl@latest",
+    "kubeseal@latest",
+    "k3d@latest",
+    "jq@latest",
+    "yq-go@latest",
+    "terraform@latest",
+    "terragrunt@latest",
+    "packer@latest",
+    "direnv@latest"
+  ],
+  "env": {
+    "PROJECT_ROOT": "$PWD",
+    "HETZNER_IP": "91.98.205.143",
+
+    "TALOS_VERSION": "v1.12.0-beta.0",
+    "KUBERNETES_VERSION": "1.34.1",
+    "CILIUM_VERSION": "1.16.4",
+
+    "TALOSCONFIG": "$PWD/talos/talosconfig",
+    "KUBECONFIG": "$PWD/talos/kubeconfig:$HOME/.kube/config"
+  },
+  "shell": {
+    "init_hook": [
+      "echo 'Loaded DevBox env for Homelab'"
+    ]
+  }
+}

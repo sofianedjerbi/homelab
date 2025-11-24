@@ -1,0 +1,31 @@
+# Environment variables (contains secrets!)
+.env
+
+# Devbox
+.devbox/
+
+# Direnv
+.direnv/
+
+# Talos configurations (contains secrets!)
+talos/talosconfig
+talos/kubeconfig
+
+# Terraform (all secrets stored in remote S3 backend)
+**/.terraform/
+**/.terraform.lock.hcl
+**/.terragrunt-cache/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

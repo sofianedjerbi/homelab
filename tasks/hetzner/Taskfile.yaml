@@ -1,0 +1,34 @@
+version: '3'
+
+tasks:
+  ssh:
+    desc: Connect to Hetzner server
+    cmds:
+      - ssh root@{{.HETZNER_IP}}
+
+  install-talos:
+    desc: Install Talos on Hetzner server via SSH (run in rescue mode)
+    cmds:
+      - bash ./tasks/hetzner/install-talos.sh {{.HETZNER_IP}} {{.TALOS_VERSION}}
+
+  apply-config:
+    desc: Apply Talos config to server
+    cmds:
+      - talosctl apply-config --insecure --nodes {{.HETZNER_IP}} --file talos/controlplane.yaml
+
+  bootstrap:
+    desc: Bootstrap Kubernetes on Talos
+    cmds:
+      - talosctl --talosconfig=talos/talosconfig config endpoint {{.HETZNER_IP}}
+      - talosctl --talosconfig=talos/talosconfig config node {{.HETZNER_IP}}
+      - talosctl --talosconfig=talos/talosconfig --nodes {{.HETZNER_IP}} bootstrap
+
+  kubeconfig:
+    desc: Get kubeconfig from Talos cluster
+    cmds:
+      - talosctl --talosconfig=talos/talosconfig kubeconfig talos/kubeconfig --nodes {{.HETZNER_IP}} --force
+
+  use:
+    desc: Switch kubectl to Hetzner Talos cluster
+    cmds:
+      - kubectl config use-context admin@homelab

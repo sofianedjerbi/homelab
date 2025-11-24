@@ -1,0 +1,17 @@
+version: '3'
+
+tasks:
+  sync:
+    desc: Deploy infrastructure with helmfile
+    cmds:
+      - helmfile sync
+
+  diff:
+    desc: Show infrastructure changes
+    cmds:
+      - helmfile diff
+
+  destroy:
+    desc: Destroy all infrastructure
+    cmds:
+      - helmfile destroy

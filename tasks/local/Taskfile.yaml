@@ -1,0 +1,30 @@
+version: '3'
+
+tasks:
+  up:
+    desc: Create k3d cluster
+    cmds:
+      - k3d cluster create --config k3d-cluster.yaml
+
+  down:
+    desc: Delete k3d cluster
+    cmds:
+      - k3d cluster delete dev
+
+  reset:
+    desc: Delete and recreate cluster
+    cmds:
+      - task: down
+      - task: up
+
+  status:
+    desc: Show cluster info and nodes
+    cmds:
+      - kubectl cluster-info
+      - kubectl get nodes
+      - kubectl config get-contexts
+
+  use:
+    desc: Switch kubectl to local k3d cluster
+    cmds:
+      - kubectl config use-context k3d-dev

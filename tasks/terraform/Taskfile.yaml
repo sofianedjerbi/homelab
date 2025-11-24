@@ -1,0 +1,113 @@
+version: '3'
+
+tasks:
+  bootstrap:
+    desc: Bootstrap S3 backend for Terraform state
+    summary: |
+      Creates S3 bucket for Terraform state management with native S3 locking.
+      Uses AWS SSO profile from AWS_PROFILE environment variable.
+
+      Requirements: Terraform 1.10+ (uses S3 native locking, no DynamoDB needed!)
+
+      Usage:
+        task tf:bootstrap
+
+      This will:
+        1. Login to AWS SSO (if not already logged in)
+        2. Create S3 bucket with versioning and encryption
+        3. Enable S3 native state locking (via use_lockfile)
+    cmds:
+      - |
+        echo "Bootstrapping Terraform S3 backend (with native S3 locking)..."
+        echo "AWS Profile: ${AWS_PROFILE}"
+        echo "Region: ${AWS_REGION}"
+        echo "Bucket: ${TF_STATE_BUCKET}"
+        echo ""
+
+        # Check if AWS SSO session is valid
+        echo "Checking AWS SSO login status..."
+        if ! aws sts get-caller-identity --profile "${AWS_PROFILE}" &>/dev/null; then
+          echo "AWS SSO session expired or not found. Logging in..."
+          aws sso login --profile "${AWS_PROFILE}"
+        else
+          echo "✓ AWS SSO session is valid."
+        fi
+
+        # Create S3 bucket
+        echo ""
+        echo "Creating S3 bucket: ${TF_STATE_BUCKET}..."
+        if aws s3api head-bucket --bucket "${TF_STATE_BUCKET}" --profile "${AWS_PROFILE}" 2>/dev/null; then
+          echo "✓ Bucket already exists."
+        else
+          aws s3api create-bucket \
+            --bucket "${TF_STATE_BUCKET}" \
+            --region "${AWS_REGION}" \
+            --profile "${AWS_PROFILE}" \
+            $(if [ "${AWS_REGION}" != "us-east-1" ]; then echo "--create-bucket-configuration LocationConstraint=${AWS_REGION}"; fi)
+          echo "✓ Bucket created."
+        fi
+
+        # Enable versioning
+        echo "Enabling versioning..."
+        aws s3api put-bucket-versioning \
+          --bucket "${TF_STATE_BUCKET}" \
+          --versioning-configuration Status=Enabled \
+          --profile "${AWS_PROFILE}"
+        echo "✓ Versioning enabled."
+
+        # Enable encryption
+        echo "Enabling encryption..."
+        aws s3api put-bucket-encryption \
+          --bucket "${TF_STATE_BUCKET}" \
+          --server-side-encryption-configuration '{
+            "Rules": [{
+              "ApplyServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }]
+          }' \
+          --profile "${AWS_PROFILE}"
+        echo "✓ Encryption enabled."
+
+        # Block public access
+        echo "Blocking public access..."
+        aws s3api put-public-access-block \
+          --bucket "${TF_STATE_BUCKET}" \
+          --public-access-block-configuration \
+            "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" \
+          --profile "${AWS_PROFILE}"
+        echo "✓ Public access blocked."
+
+        echo ""
+        echo "✅ Bootstrap complete!"
+        echo ""
+        echo "Note: Using S3 native locking (Terraform 1.10+)"
+        echo "      Lock files stored in S3 as .tflock"
+        echo ""
+        echo "You can now run: task tf -- apply clusters/lab-01"
+
+  default:
+    desc: Run terragrunt command in specified directory
+    summary: |
+      Simple wrapper for terragrunt commands.
+
+      Usage:
+        task tf -- apply clusters/lab-01
+        task tf -- plan clusters/lab-02
+        task tf -- destroy clusters/lab-01
+        task tf -- output clusters/lab-01
+
+      Runs: cd terraform/<path> && terragrunt <command>
+    cmds:
+      - |
+        CMD="{{.CLI_ARGS}}"
+        LAST_ARG="${CMD##* }"
+        REST="${CMD% *}"
+
+        if [ "$CMD" = "$REST" ]; then
+          echo "Usage: task tf -- <command> <path>"
+          echo "Example: task tf -- apply clusters/lab-01"
+          exit 1
+        fi
+
+        cd terraform/$LAST_ARG && terragrunt $REST
