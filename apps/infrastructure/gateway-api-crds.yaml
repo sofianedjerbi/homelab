@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/kubernetes-sigs/gateway-api
     targetRevision: v1.2.0
-    path: config/crd/experimental
+    path: config/crd/standard
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:
