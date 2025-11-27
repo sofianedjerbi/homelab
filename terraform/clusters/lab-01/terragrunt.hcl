@@ -47,4 +47,22 @@ inputs = {
   cilium_values = [
     file("${get_repo_root()}/infrastructure/cilium/values.yaml")
   ]
+
+  # Firewall rules for Gateway API
+  extra_firewall_rules = [
+    {
+      direction   = "in"
+      protocol    = "tcp"
+      port        = "8080"
+      source_ips  = ["0.0.0.0/0", "::/0"]
+      description = "HTTP Gateway API"
+    },
+    {
+      direction   = "in"
+      protocol    = "tcp"
+      port        = "8443"
+      source_ips  = ["0.0.0.0/0", "::/0"]
+      description = "HTTPS Gateway API"
+    }
+  ]
 }
