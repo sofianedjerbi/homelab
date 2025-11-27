@@ -23,8 +23,6 @@ ingressController:
 # ============================================
 operator:
   replicas: 1
-  podAnnotations:
-    config-hash: "v2-hostnetwork"  # Change this to force restart
 
 # ============================================
 # Talos-specific settings (REQUIRED)
