@@ -17,8 +17,8 @@ remote_state {
     # S3 native state locking (Terraform 1.10+, no DynamoDB needed!)
     use_lockfile = true
 
-    # AWS SSO profile support
-    profile = get_env("AWS_PROFILE", "")
+    # AWS SSO profile support (optional, access keys via env vars also work)
+    profile = get_env("AWS_PROFILE", null)
   }
 }
 
