@@ -1,0 +1,71 @@
+# Cilium Configuration for Talos Linux with Gateway API
+# NOTE: This REPLACES the Terraform defaults, so all Talos-required settings are included
+
+# ============================================
+# Gateway API (the main addition)
+# ============================================
+gatewayAPI:
+  enabled: true
+
+# ============================================
+# Disable features we don't need
+# ============================================
+hubble:
+  enabled: false
+
+ingressController:
+  enabled: false  # Using Gateway API instead
+
+# ============================================
+# Operator configuration
+# ============================================
+operator:
+  replicas: 1
+
+# ============================================
+# Talos-specific settings (REQUIRED)
+# ============================================
+ipam:
+  mode: kubernetes
+
+ipv4NativeRoutingCIDR: 10.244.0.0/16
+
+routingMode: native
+
+kubeProxyReplacement: true
+
+bpf:
+  masquerade: false
+
+loadBalancer:
+  acceleration: native
+
+# Talos filesystem compatibility
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+
+# Security contexts for Talos
+securityContext:
+  capabilities:
+    ciliumAgent:
+      - CHOWN
+      - KILL
+      - NET_ADMIN
+      - NET_RAW
+      - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    cleanCiliumState:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+
+# KubePrism endpoint
+k8sServiceHost: 127.0.0.1
+k8sServicePort: 7445

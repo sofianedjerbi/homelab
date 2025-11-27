@@ -7,7 +7,7 @@ configs:
 
 server:
   service:
-    type: LoadBalancer
+    type: ClusterIP  # Will be exposed via Cilium Gateway API
   resources:
     requests:
       cpu: 100m
