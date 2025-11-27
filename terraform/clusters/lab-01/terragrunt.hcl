@@ -42,4 +42,9 @@ inputs = {
   # network_ipv4_cidr  = "10.0.0.0/16"
   # pod_ipv4_cidr      = "10.244.0.0/16"
   # service_ipv4_cidr  = "10.96.0.0/12"
+
+  # Cilium with Gateway API enabled
+  cilium_values = [
+    file("${get_repo_root()}/infrastructure/cilium/values.yaml")
+  ]
 }
