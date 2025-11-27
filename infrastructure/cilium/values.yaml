@@ -6,6 +6,8 @@
 # ============================================
 gatewayAPI:
   enabled: true
+  hostNetwork:
+    enabled: true
 
 # ============================================
 # Disable features we don't need
