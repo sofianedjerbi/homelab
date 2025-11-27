@@ -18,7 +18,8 @@ remote_state {
     use_lockfile = true
 
     # AWS SSO profile support (optional, access keys via env vars also work)
-    profile = get_env("AWS_PROFILE", null)
+    # Only set profile if AWS_PROFILE env var is defined
+    skip_metadata_api_check = true
   }
 }
 
