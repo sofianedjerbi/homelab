@@ -10,17 +10,10 @@ spec:
     - name: main-gateway
       namespace: default
   rules:
-    # All /argo requests - rewrite to / (ArgoCD handles rootpath internally)
     - matches:
         - path:
             type: PathPrefix
             value: /argo
-      filters:
-        - type: URLRewrite
-          urlRewrite:
-            path:
-              type: ReplacePrefixMatch
-              replacePrefixMatch: /
       backendRefs:
         - name: argocd-server
           port: 80
