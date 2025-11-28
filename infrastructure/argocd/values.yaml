@@ -7,6 +7,14 @@ configs:
     server.insecure: false
 
 server:
+  # Use cert-manager to generate a valid certificate for the domain
+  certificate:
+    enabled: true
+    domain: argo.lab.sofianedjerbi.com
+    issuer:
+      group: cert-manager.io
+      kind: ClusterIssuer
+      name: letsencrypt-prod
   service:
     type: ClusterIP  # Will be exposed via Cilium Gateway API
   resources:
