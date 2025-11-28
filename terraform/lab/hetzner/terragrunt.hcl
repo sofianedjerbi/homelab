@@ -14,6 +14,25 @@ terraform {
   source = "tfr:///hcloud-talos/talos/hcloud?version=2.20.3"
 }
 
+# Write kubeconfig and talosconfig to talos/ directory
+generate "local_configs" {
+  path      = "local_configs.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<-EOF
+resource "local_file" "kubeconfig" {
+  content         = local.kubeconfig
+  filename        = "${get_repo_root()}/talos/kubeconfig"
+  file_permission = "0600"
+}
+
+resource "local_file" "talosconfig" {
+  content         = data.talos_client_configuration.this.talos_config
+  filename        = "${get_repo_root()}/talos/talosconfig"
+  file_permission = "0600"
+}
+EOF
+}
+
 inputs = {
   # Cluster identification
   cluster_name = "lab-01"
