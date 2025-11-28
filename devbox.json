@@ -12,18 +12,19 @@
     "terraform@latest",
     "terragrunt@latest",
     "packer@latest",
-    "direnv@latest"
+    "direnv@latest",
+    "argocd@latest"
   ],
   "env": {
     "PROJECT_ROOT": "$PWD",
-    "HETZNER_IP": "91.98.205.143",
+    "HETZNER_IP":   "91.98.205.143",
 
-    "TALOS_VERSION": "v1.12.0-beta.0",
+    "TALOS_VERSION":      "v1.12.0-beta.0",
     "KUBERNETES_VERSION": "1.34.1",
-    "CILIUM_VERSION": "1.16.4",
+    "CILIUM_VERSION":     "1.16.4",
 
     "TALOSCONFIG": "$PWD/talos/talosconfig",
-    "KUBECONFIG": "$PWD/talos/kubeconfig:$HOME/.kube/config"
+    "KUBECONFIG":  "$PWD/talos/kubeconfig:$HOME/.kube/config"
   },
   "shell": {
     "init_hook": [

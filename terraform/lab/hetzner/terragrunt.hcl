@@ -69,16 +69,16 @@ inputs = {
     {
       direction   = "in"
       protocol    = "tcp"
-      port        = "8080"
+      port        = "80"
       source_ips  = ["0.0.0.0/0", "::/0"]
-      description = "HTTP Gateway API"
+      description = "HTTP"
     },
     {
       direction   = "in"
       protocol    = "tcp"
-      port        = "8443"
+      port        = "443"
       source_ips  = ["0.0.0.0/0", "::/0"]
-      description = "HTTPS Gateway API"
+      description = "HTTPS"
     }
   ]
 }
