@@ -28,6 +28,22 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    # Loki/Grafana subdomain
+    - name: loki-http
+      protocol: HTTP
+      port: 80
+      hostname: loki.lab.sofianedjerbi.com
+      allowedRoutes:
+        namespaces:
+          from: All
+    # n8n subdomain
+    - name: n8n-http
+      protocol: HTTP
+      port: 80
+      hostname: n8n.lab.sofianedjerbi.com
+      allowedRoutes:
+        namespaces:
+          from: All
     # ArgoCD subdomain - TLS passthrough (ArgoCD handles TLS for native gRPC)
     - name: argo-tls
       protocol: TLS
