@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki-stack
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: loki-stack
+    targetRevision: 2.10.3
+    helm:
+      valuesObject:
+        loki:
+          persistence:
+            enabled: false  # No storage yet, will enable with Longhorn later
+        promtail:
+          enabled: true
+        grafana:
+          enabled: true
+          adminPassword: admin  # Change this or use a secret
+          sidecar:
+            datasources:
+              enabled: true
+          persistence:
+            enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
