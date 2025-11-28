@@ -4,6 +4,8 @@ metadata:
   name: argocd-route
   namespace: argocd
 spec:
+  hostnames:
+    - lab.sofianedjerbi.com
   parentRefs:
     - name: main-gateway
       namespace: default

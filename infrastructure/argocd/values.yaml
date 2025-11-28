@@ -1,9 +1,11 @@
 global:
-  domain: argocd.localhost
+  domain: lab.sofianedjerbi.com
 
 configs:
   params:
     server.insecure: true
+    server.basehref: /argo
+    server.rootpath: /argo
 
 server:
   service:
