@@ -5,6 +5,8 @@ configs:
   params:
     # TLS enabled for native gRPC support (Cilium Gateway uses TLS passthrough)
     server.insecure: false
+  rbac:
+    policy.default: role:admin
 
 server:
   # Use cert-manager to generate a valid certificate for the domain
