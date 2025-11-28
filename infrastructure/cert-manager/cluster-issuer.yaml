@@ -9,12 +9,39 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
     solvers:
-      - http01:
+      # Solver for main lab domain
+      - selector:
+          dnsNames:
+            - lab.sofianedjerbi.com
+        http01:
           gatewayHTTPRoute:
             parentRefs:
               - name: main-gateway
                 namespace: default
                 kind: Gateway
+                sectionName: http
+      # Solver for loki subdomain
+      - selector:
+          dnsNames:
+            - loki.lab.sofianedjerbi.com
+        http01:
+          gatewayHTTPRoute:
+            parentRefs:
+              - name: main-gateway
+                namespace: default
+                kind: Gateway
+                sectionName: loki-http
+      # Solver for n8n subdomain
+      - selector:
+          dnsNames:
+            - n8n.lab.sofianedjerbi.com
+        http01:
+          gatewayHTTPRoute:
+            parentRefs:
+              - name: main-gateway
+                namespace: default
+                kind: Gateway
+                sectionName: n8n-http
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
