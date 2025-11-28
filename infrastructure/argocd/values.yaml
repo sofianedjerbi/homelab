@@ -4,8 +4,8 @@ global:
 configs:
   params:
     server.insecure: true
+    # Only basehref for UI assets, no rootpath - gateway handles path rewriting
     server.basehref: /argo
-    server.rootpath: /argo
 
 server:
   service:

@@ -10,27 +10,17 @@ spec:
     - name: main-gateway
       namespace: default
   rules:
-    # UI and REST API - keep /argo prefix
+    # Rewrite /argo/* to /* - ArgoCD serves at root, gateway handles subpath
     - matches:
         - path:
             type: PathPrefix
             value: /argo
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
       backendRefs:
-        - name: argocd-server
-          port: 80
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: GRPCRoute
-metadata:
-  name: argocd-grpc-route
-  namespace: argocd
-spec:
-  hostnames:
-    - lab.sofianedjerbi.com
-  parentRefs:
-    - name: main-gateway
-      namespace: default
-  rules:
-    - backendRefs:
         - name: argocd-server
           port: 80
