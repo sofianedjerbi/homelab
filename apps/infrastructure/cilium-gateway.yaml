@@ -15,6 +15,7 @@ metadata:
 spec:
   gatewayClassName: cilium
   listeners:
+    # Main lab domain
     - name: http
       protocol: HTTP
       port: 80
@@ -30,6 +31,26 @@ spec:
         mode: Terminate
         certificateRefs:
           - name: lab-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: All
+    # ArgoCD subdomain
+    - name: argo-http
+      protocol: HTTP
+      port: 80
+      hostname: argo.lab.sofianedjerbi.com
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: argo-https
+      protocol: HTTPS
+      port: 443
+      hostname: argo.lab.sofianedjerbi.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: argo-tls
             kind: Secret
       allowedRoutes:
         namespaces:

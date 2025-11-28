@@ -5,6 +5,12 @@ variable "domain" {
   type        = string
 }
 
+variable "additional_subdomains" {
+  description = "Additional subdomains to create (e.g., ['argo'] creates argo.lab.sofianedjerbi.com)"
+  type        = list(string)
+  default     = []
+}
+
 variable "origin_ip" {
   description = "Origin server IP address"
   type        = string

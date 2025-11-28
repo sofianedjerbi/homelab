@@ -37,3 +37,14 @@ resource "aws_route53_record" "this" {
   ttl     = 300
   records = [var.origin_ip]
 }
+
+# Additional subdomain A records (e.g., argo.lab.sofianedjerbi.com)
+resource "aws_route53_record" "subdomains" {
+  for_each = toset(var.additional_subdomains)
+
+  zone_id = data.aws_route53_zone.this.zone_id
+  name    = "${each.value}.${var.domain}"
+  type    = "A"
+  ttl     = 300
+  records = [var.origin_ip]
+}

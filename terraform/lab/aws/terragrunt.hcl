@@ -31,6 +31,9 @@ inputs = {
   domain    = get_env("LAB_DOMAIN", "lab.sofianedjerbi.com")
   origin_ip = dependency.hetzner.outputs.public_ipv4_list[0]
 
+  # Additional subdomains pointing to the same IP
+  additional_subdomains = ["argo"]
+
   tags = {
     Environment = "lab"
   }

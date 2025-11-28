@@ -5,22 +5,16 @@ metadata:
   namespace: argocd
 spec:
   hostnames:
-    - lab.sofianedjerbi.com
+    - argo.lab.sofianedjerbi.com
   parentRefs:
     - name: main-gateway
       namespace: default
   rules:
-    # Rewrite /argo/* to /* - ArgoCD serves at root, gateway handles subpath
+    # Simple route - ArgoCD serves at root on its own subdomain
     - matches:
         - path:
             type: PathPrefix
-            value: /argo
-      filters:
-        - type: URLRewrite
-          urlRewrite:
-            path:
-              type: ReplacePrefixMatch
-              replacePrefixMatch: /
+            value: /
       backendRefs:
         - name: argocd-server
           port: 80

@@ -1,11 +1,9 @@
 global:
-  domain: lab.sofianedjerbi.com
+  domain: argo.lab.sofianedjerbi.com
 
 configs:
   params:
     server.insecure: true
-    # Only basehref for UI assets, no rootpath - gateway handles path rewriting
-    server.basehref: /argo
 
 server:
   service:
