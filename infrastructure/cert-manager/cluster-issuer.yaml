@@ -15,3 +15,16 @@ spec:
               - name: main-gateway
                 namespace: default
                 kind: Gateway
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lab-tls
+  namespace: default
+spec:
+  secretName: lab-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - lab.sofianedjerbi.com
