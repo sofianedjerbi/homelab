@@ -1,7 +1,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: argocd-route
+  name: argocd-http-route
   namespace: argocd
 spec:
   hostnames:
@@ -14,6 +14,27 @@ spec:
         - path:
             type: PathPrefix
             value: /argo
+      backendRefs:
+        - name: argocd-server
+          port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: argocd-grpc-route
+  namespace: argocd
+spec:
+  hostnames:
+    - lab.sofianedjerbi.com
+  parentRefs:
+    - name: main-gateway
+      namespace: default
+  rules:
+    - matches:
+        - headers:
+            - name: Content-Type
+              type: RegularExpression
+              value: "^application/grpc.*$"
       backendRefs:
         - name: argocd-server
           port: 80
