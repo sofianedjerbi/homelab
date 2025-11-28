@@ -8,8 +8,7 @@
 .direnv/
 
 # Talos configurations (contains secrets!)
-talos/talosconfig
-talos/kubeconfig
+talos/
 
 # Terraform (all secrets stored in remote S3 backend)
 **/.terraform/
