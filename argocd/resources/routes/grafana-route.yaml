@@ -1,0 +1,16 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: grafana-route
+  namespace: monitoring
+spec:
+  hostnames:
+    - loki.lab.sofianedjerbi.com
+  parentRefs:
+    - name: main-gateway
+      namespace: default
+      sectionName: loki-https
+  rules:
+    - backendRefs:
+        - name: loki-stack-grafana
+          port: 80

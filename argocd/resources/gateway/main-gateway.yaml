@@ -40,3 +40,16 @@ spec:
           from: All
         kinds:
           - kind: TLSRoute
+    # Grafana (Loki stack) subdomain
+    - name: loki-https
+      protocol: HTTPS
+      port: 443
+      hostname: loki.lab.sofianedjerbi.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: loki-tls
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: All

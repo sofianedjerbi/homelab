@@ -32,7 +32,7 @@ inputs = {
   origin_ip = dependency.hetzner.outputs.public_ipv4_list[0]
 
   # Additional subdomains pointing to the same IP
-  additional_subdomains = ["argo"]
+  additional_subdomains = ["argo", "loki", "n8n"]
 
   tags = {
     Environment = "lab"
