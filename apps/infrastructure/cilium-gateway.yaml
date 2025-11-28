@@ -10,12 +10,26 @@ kind: Gateway
 metadata:
   name: main-gateway
   namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   gatewayClassName: cilium
   listeners:
     - name: http
       protocol: HTTP
       port: 8080
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      protocol: HTTPS
+      port: 8443
+      hostname: lab.sofianedjerbi.com
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: lab-tls
+            kind: Secret
       allowedRoutes:
         namespaces:
           from: All
