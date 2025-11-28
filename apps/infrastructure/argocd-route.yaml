@@ -14,12 +14,6 @@ spec:
         - path:
             type: PathPrefix
             value: /argo
-      filters:
-        - type: URLRewrite
-          urlRewrite:
-            path:
-              type: ReplacePrefixMatch
-              replacePrefixMatch: /
       backendRefs:
         - name: argocd-server
           port: 80
