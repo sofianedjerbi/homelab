@@ -10,25 +10,17 @@ spec:
     - name: main-gateway
       namespace: default
   rules:
-    # gRPC API calls - rewrite /argo/xxx.yyyService to /xxx.yyyService
+    # All /argo requests - rewrite to / (ArgoCD handles rootpath internally)
     - matches:
         - path:
-            type: RegularExpression
-            value: /argo/[a-z]+\.[A-Z][a-zA-Z]+Service.*
+            type: PathPrefix
+            value: /argo
       filters:
         - type: URLRewrite
           urlRewrite:
             path:
               type: ReplacePrefixMatch
               replacePrefixMatch: /
-      backendRefs:
-        - name: argocd-server
-          port: 80
-    # UI and other paths - no rewrite
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /argo
       backendRefs:
         - name: argocd-server
           port: 80
