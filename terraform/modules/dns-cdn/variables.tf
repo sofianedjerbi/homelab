@@ -5,11 +5,6 @@ variable "domain" {
   type        = string
 }
 
-variable "zone_id" {
-  description = "Route53 hosted zone ID"
-  type        = string
-}
-
 variable "origin_ip" {
   description = "Origin server IP address (Hetzner floating IP)"
   type        = string

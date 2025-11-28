@@ -13,10 +13,20 @@ terraform {
 }
 
 locals {
+  # Extract root domain from subdomain (e.g., lab.sofianedjerbi.com -> sofianedjerbi.com)
+  domain_parts = split(".", var.domain)
+  root_domain  = join(".", slice(local.domain_parts, length(local.domain_parts) - 2, length(local.domain_parts)))
+
   tags = merge(var.tags, {
     ManagedBy = "terraform"
     Module    = "dns-cdn"
   })
+}
+
+# Look up the hosted zone by domain name
+data "aws_route53_zone" "this" {
+  name         = "${local.root_domain}."
+  private_zone = false
 }
 
 # ACM Certificate (must be in us-east-1 for CloudFront)
@@ -47,7 +57,7 @@ resource "aws_route53_record" "cert_validation" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = var.zone_id
+  zone_id         = data.aws_route53_zone.this.zone_id
 }
 
 # Wait for certificate validation

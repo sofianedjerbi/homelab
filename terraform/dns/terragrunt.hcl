@@ -35,7 +35,6 @@ EOF
 
 inputs = {
   domain    = get_env("LAB_DOMAIN", "lab.sofianedjerbi.com")
-  zone_id   = get_env("ROUTE53_ZONE_ID")
   origin_ip = dependency.cluster.outputs.public_ipv4_list[0]
 
   # CloudFront settings
