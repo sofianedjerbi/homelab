@@ -35,23 +35,15 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    # ArgoCD subdomain
-    - name: argo-http
-      protocol: HTTP
-      port: 80
-      hostname: argo.lab.sofianedjerbi.com
-      allowedRoutes:
-        namespaces:
-          from: All
-    - name: argo-https
-      protocol: HTTPS
+    # ArgoCD subdomain - TLS passthrough (ArgoCD handles TLS for native gRPC)
+    - name: argo-tls
+      protocol: TLS
       port: 443
       hostname: argo.lab.sofianedjerbi.com
       tls:
-        mode: Terminate
-        certificateRefs:
-          - name: argo-tls
-            kind: Secret
+        mode: Passthrough
       allowedRoutes:
         namespaces:
           from: All
+        kinds:
+          - kind: TLSRoute

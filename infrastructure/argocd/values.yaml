@@ -3,7 +3,8 @@ global:
 
 configs:
   params:
-    server.insecure: true
+    # TLS enabled for native gRPC support (Cilium Gateway uses TLS passthrough)
+    server.insecure: false
 
 server:
   service:
