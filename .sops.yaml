@@ -1,0 +1,4 @@
+creation_rules:
+  # Talos configuration files
+  - path_regex: talos/.*
+    age: age1m58w3a52776phxqzeyztezx09u4z7964ug0skf2rvzrzw63v2dhq602hcx

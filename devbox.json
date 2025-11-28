@@ -13,7 +13,9 @@
     "terragrunt@latest",
     "packer@latest",
     "direnv@latest",
-    "argocd@latest"
+    "argocd@latest",
+    "sops@latest",
+    "age@latest"
   ],
   "env": {
     "PROJECT_ROOT": "$PWD",

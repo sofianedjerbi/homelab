@@ -7,8 +7,9 @@
 # Direnv
 .direnv/
 
-# Talos configurations (contains secrets!)
-talos/
+# Talos configurations are SOPS encrypted and safe to commit
+# Only ignore decrypted temp files
+talos/*.dec.yaml
 
 # Terraform (all secrets stored in remote S3 backend)
 **/.terraform/
