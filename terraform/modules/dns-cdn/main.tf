@@ -158,7 +158,7 @@ resource "aws_cloudfront_origin_request_policy" "all_viewer" {
 
 # DNS record pointing to CloudFront
 resource "aws_route53_record" "this" {
-  zone_id = var.zone_id
+  zone_id = data.aws_route53_zone.this.zone_id
   name    = var.domain
   type    = "A"
 
@@ -171,7 +171,7 @@ resource "aws_route53_record" "this" {
 
 # AAAA record for IPv6
 resource "aws_route53_record" "this_ipv6" {
-  zone_id = var.zone_id
+  zone_id = data.aws_route53_zone.this.zone_id
   name    = var.domain
   type    = "AAAA"
 
