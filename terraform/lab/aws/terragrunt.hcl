@@ -1,12 +1,12 @@
-# DNS and CDN Configuration
-# CloudFront + ACM + Route53 for lab.sofianedjerbi.com
+# Lab AWS Infrastructure
+# CloudFront + ACM + Route53
 
 include "root" {
   path = find_in_parent_folders("root.hcl")
 }
 
-dependency "cluster" {
-  config_path = "../clusters/lab-01"
+dependency "hetzner" {
+  config_path = "../hetzner"
 
   mock_outputs = {
     public_ipv4_list = ["0.0.0.0"]
@@ -35,7 +35,7 @@ EOF
 
 inputs = {
   domain    = get_env("LAB_DOMAIN", "lab.sofianedjerbi.com")
-  origin_ip = dependency.cluster.outputs.public_ipv4_list[0]
+  origin_ip = dependency.hetzner.outputs.public_ipv4_list[0]
 
   # CloudFront settings
   origin_port     = 8080

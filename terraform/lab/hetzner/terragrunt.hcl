@@ -1,15 +1,12 @@
-# Lab-01 Cluster Configuration
-# Single-node Talos cluster on Hetzner Cloud CX43
+# Lab Hetzner Cluster
+# Single-node Talos cluster on Hetzner Cloud
 
 include "root" {
   path = find_in_parent_folders("root.hcl")
 }
 
-# Ensure Talos images exist before deploying cluster
 dependency "talos_images" {
   config_path = "../../_dependencies/talos-images"
-
-  # We don't need outputs, just ensure images are built first
   skip_outputs = true
 }
 
