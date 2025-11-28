@@ -10,7 +10,7 @@ spec:
     - name: main-gateway
       namespace: default
   rules:
-    # gRPC calls - strip /argo prefix since ArgoCD gRPC doesn't respect rootpath
+    # gRPC-web calls - strip /argo prefix since ArgoCD gRPC doesn't respect rootpath
     - matches:
         - path:
             type: PathPrefix
@@ -18,6 +18,17 @@ spec:
           headers:
             - name: Content-Type
               value: application/grpc-web
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: argocd-server
+          port: 80
+    # gRPC-web+proto calls - strip /argo prefix
+    - matches:
         - path:
             type: PathPrefix
             value: /argo/
