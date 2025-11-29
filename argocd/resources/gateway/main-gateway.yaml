@@ -16,6 +16,8 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+        kinds:
+          - kind: HTTPRoute
     - name: https
       protocol: HTTPS
       port: 443
@@ -28,6 +30,8 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+        kinds:
+          - kind: HTTPRoute
     # Loki/Grafana subdomain
     - name: loki-http
       protocol: HTTP
@@ -36,6 +40,8 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+        kinds:
+          - kind: HTTPRoute
     # n8n subdomain
     - name: n8n-http
       protocol: HTTP
@@ -44,6 +50,8 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+        kinds:
+          - kind: HTTPRoute
     # ArgoCD subdomain - TLS passthrough (ArgoCD handles TLS for native gRPC)
     - name: argo-tls
       protocol: TLS
@@ -69,3 +77,5 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+        kinds:
+          - kind: HTTPRoute
