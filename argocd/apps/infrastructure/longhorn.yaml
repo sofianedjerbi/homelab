@@ -12,7 +12,10 @@ spec:
     chart: longhorn
     targetRevision: 1.7.2
     helm:
+      skipCrds: false
       valuesObject:
+        preUpgradeChecker:
+          jobEnabled: false  # Skip pre-upgrade check for fresh install
         defaultSettings:
           # Single node setup - no replication needed
           defaultReplicaCount: 1
@@ -30,3 +33,9 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - SkipDryRunOnMissingResource=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
