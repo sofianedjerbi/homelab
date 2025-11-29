@@ -24,6 +24,12 @@ spec:
               enabled: true
           persistence:
             enabled: false
+          additionalDataSources:
+            - name: Prometheus
+              type: prometheus
+              url: http://prometheus-server.monitoring.svc.cluster.local
+              access: proxy
+              isDefault: true
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
