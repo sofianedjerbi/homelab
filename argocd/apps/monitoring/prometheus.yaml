@@ -18,7 +18,7 @@ spec:
         kube-state-metrics:
           enabled: false  # Already installed separately
         prometheus-node-exporter:
-          enabled: true
+          enabled: false  # Already installed separately
         server:
           persistentVolume:
             enabled: false  # Enable later with Longhorn
