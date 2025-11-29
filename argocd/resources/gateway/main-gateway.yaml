@@ -16,8 +16,6 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-        kinds:
-          - kind: HTTPRoute
     - name: https
       protocol: HTTPS
       port: 443
@@ -30,8 +28,6 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-        kinds:
-          - kind: HTTPRoute
     # Loki/Grafana subdomain
     - name: loki-http
       protocol: HTTP
@@ -40,31 +36,6 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-        kinds:
-          - kind: HTTPRoute
-    # n8n subdomain
-    - name: n8n-http
-      protocol: HTTP
-      port: 80
-      hostname: n8n.lab.sofianedjerbi.com
-      allowedRoutes:
-        namespaces:
-          from: All
-        kinds:
-          - kind: HTTPRoute
-    # ArgoCD subdomain - TLS passthrough (ArgoCD handles TLS for native gRPC)
-    - name: argo-tls
-      protocol: TLS
-      port: 443
-      hostname: argo.lab.sofianedjerbi.com
-      tls:
-        mode: Passthrough
-      allowedRoutes:
-        namespaces:
-          from: All
-        kinds:
-          - kind: TLSRoute
-    # Grafana (Loki stack) subdomain
     - name: loki-https
       protocol: HTTPS
       port: 443
@@ -77,5 +48,34 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    # n8n subdomain
+    - name: n8n-http
+      protocol: HTTP
+      port: 80
+      hostname: n8n.lab.sofianedjerbi.com
+      allowedRoutes:
+        namespaces:
+          from: All
+---
+# Separate Gateway for ArgoCD TLS passthrough
+# Cilium has a bug where mixing TLSRoute-only listeners with HTTPRoute listeners
+# breaks HTTPRoute attachment: https://github.com/cilium/cilium/issues/28186
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: argocd-gateway
+  namespace: default
+spec:
+  gatewayClassName: cilium
+  listeners:
+    - name: argo-tls
+      protocol: TLS
+      port: 443
+      hostname: argo.lab.sofianedjerbi.com
+      tls:
+        mode: Passthrough
+      allowedRoutes:
+        namespaces:
+          from: All
         kinds:
-          - kind: HTTPRoute
+          - kind: TLSRoute

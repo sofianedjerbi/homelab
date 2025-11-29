@@ -7,7 +7,7 @@ spec:
   hostnames:
     - argo.lab.sofianedjerbi.com
   parentRefs:
-    - name: main-gateway
+    - name: argocd-gateway
       namespace: default
       sectionName: argo-tls
   rules:
