@@ -56,18 +56,8 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
----
-# Separate Gateway for ArgoCD TLS passthrough
-# Cilium has a bug where mixing TLSRoute-only listeners with HTTPRoute listeners
-# breaks HTTPRoute attachment: https://github.com/cilium/cilium/issues/28186
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: argocd-gateway
-  namespace: default
-spec:
-  gatewayClassName: cilium
-  listeners:
+    # ArgoCD subdomain - TLS passthrough (ArgoCD handles TLS for native gRPC)
+    # NOTE: No kinds restriction to avoid Cilium bug #28186
     - name: argo-tls
       protocol: TLS
       port: 443
@@ -77,5 +67,3 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-        kinds:
-          - kind: TLSRoute
