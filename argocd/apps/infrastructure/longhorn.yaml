@@ -13,6 +13,9 @@ spec:
     targetRevision: 1.7.2
     helm:
       skipCrds: false
+      parameters:
+        - name: preUpgradeChecker.jobEnabled
+          value: "false"
       valuesObject:
         preUpgradeChecker:
           jobEnabled: false  # Skip pre-upgrade check for fresh install
@@ -34,6 +37,8 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - SkipDryRunOnMissingResource=true
+      - ServerSideApply=true
+      - Replace=true
     managedNamespaceMetadata:
       labels:
         pod-security.kubernetes.io/enforce: privileged
