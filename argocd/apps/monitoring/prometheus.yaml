@@ -16,9 +16,9 @@ spec:
         prometheus-pushgateway:
           enabled: false
         kube-state-metrics:
-          enabled: false  # Already installed separately
+          enabled: true
         prometheus-node-exporter:
-          enabled: false  # Already installed separately
+          enabled: true
         server:
           persistentVolume:
             enabled: false  # Enable later with Longhorn
