@@ -3,7 +3,7 @@
 
 module "kubernetes" {
   source  = "hcloud-k8s/kubernetes/hcloud"
-  version = "~> 4.0"
+  version = "~> 3.13"
 
   cluster_name = var.cluster_name
   hcloud_token = var.hcloud_token
