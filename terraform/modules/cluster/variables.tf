@@ -45,7 +45,7 @@ variable "gateway_api_enabled" {
 variable "gateway_api_version" {
   description = "Gateway API version to install"
   type        = string
-  default     = "v1.2.0"
+  default     = "v1.4.1"
 }
 
 variable "gateway_api_experimental" {

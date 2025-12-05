@@ -30,7 +30,7 @@ unit "cluster" {
 
     # Gateway API support (installs CRDs + enables Cilium Gateway controller)
     gateway_api_enabled      = true
-    gateway_api_version      = "v1.2.0"
+    gateway_api_version      = "v1.4.1"
     gateway_api_experimental = true  # Includes TLSRoute
   }
 }
