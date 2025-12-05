@@ -1,0 +1,80 @@
+# ArgoCD Helm values
+# KSOPS integration for SOPS-encrypted secrets
+
+configs:
+  secret:
+    createSecret: false
+  cmp:
+    create: true
+    plugins:
+      ksops:
+        allowConcurrency: true
+        discover:
+          find:
+            glob: "**/*ksops*.yaml"
+        generate:
+          command:
+            - sh
+            - -c
+            - "kustomize build --enable-alpha-plugins --enable-exec ."
+        lockRepo: false
+
+repoServer:
+  volumes:
+    - name: custom-tools
+      emptyDir: {}
+    - name: sops-age-key
+      secret:
+        secretName: sops-age-key
+    - name: cmp-plugin
+      configMap:
+        name: argocd-cmp-cm
+    - name: cmp-tmp
+      emptyDir: {}
+
+  initContainers:
+    - name: install-ksops
+      image: viaductoss/ksops:v4.3.2
+      command:
+        - sh
+        - -c
+        - |
+          cp /usr/local/bin/ksops /custom-tools/ksops
+          cp /usr/local/bin/kustomize /custom-tools/kustomize
+      volumeMounts:
+        - name: custom-tools
+          mountPath: /custom-tools
+
+  extraContainers:
+    - name: ksops
+      image: viaductoss/ksops:v4.3.2
+      command:
+        - /var/run/argocd/argocd-cmp-server
+      env:
+        - name: SOPS_AGE_KEY_FILE
+          value: /sops-age-key/keys.txt
+        - name: XDG_CONFIG_HOME
+          value: /home/argocd/.config
+        - name: KUSTOMIZE_PLUGIN_HOME
+          value: /home/argocd/.config/kustomize/plugin
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+      volumeMounts:
+        - name: var-files
+          mountPath: /var/run/argocd
+        - name: plugins
+          mountPath: /home/argocd/cmp-server/plugins
+        - name: cmp-tmp
+          mountPath: /tmp
+        - name: cmp-plugin
+          mountPath: /home/argocd/cmp-server/config/plugin.yaml
+          subPath: ksops.yaml
+        - name: custom-tools
+          mountPath: /home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops
+          subPath: ksops
+        - name: custom-tools
+          mountPath: /usr/local/bin/kustomize
+          subPath: kustomize
+        - name: sops-age-key
+          mountPath: /sops-age-key

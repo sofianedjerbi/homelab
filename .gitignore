@@ -15,6 +15,7 @@ talos/*.dec.yaml
 **/.terraform/
 **/.terraform.lock.hcl
 **/.terragrunt-cache/
+**/.terragrunt-stack/
 *.tfstate
 *.tfstate.backup
 *.tfvars

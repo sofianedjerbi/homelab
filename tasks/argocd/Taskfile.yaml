@@ -2,6 +2,7 @@ version: '3'
 
 vars:
   OVERLAY: etcdme-nbg1-dc3
+  REPO_URL: https://github.com/sofianedjerbi/homelab
 
 tasks:
   generate-secrets:
@@ -21,9 +22,12 @@ tasks:
       - sops -d argocd/overlays/{{.OVERLAY}}/secrets.sops.yaml | kubectl apply -f -
       - echo "Installing ArgoCD via Helmfile..."
       - helmfile -f argocd/helmfile.yaml apply
-      - echo "Applying ArgoCD applications..."
-      - kubectl apply -k argocd/overlays/{{.OVERLAY}}
-      - echo "✅ ArgoCD bootstrapped!"
+      - echo "Applying root application..."
+      - |
+        sed -e 's|REPO_URL_PLACEHOLDER|{{.REPO_URL}}|' \
+            -e 's|OVERLAY_PATH_PLACEHOLDER|argocd/overlays/{{.OVERLAY}}|' \
+            argocd/base/apps/root-app.yaml | kubectl apply -f -
+      - echo "✅ ArgoCD bootstrapped! Sync will start automatically."
 
   password:
     desc: Get ArgoCD admin password

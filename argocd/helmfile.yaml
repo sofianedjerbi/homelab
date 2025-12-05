@@ -10,6 +10,4 @@ releases:
     createNamespace: true
     wait: true
     values:
-      - configs:
-          secret:
-            createSecret: false
+      - values/argocd.yaml
