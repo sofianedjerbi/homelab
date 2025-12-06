@@ -57,7 +57,6 @@ echo -e "${YELLOW}Generating secrets for overlay: ${OVERLAY}${NC}"
 echo ""
 
 # Generate random secrets (some must match across resources)
-KEYCLOAK_ADMIN_PASSWORD=$(gen_password)
 KEYCLOAK_DB_PASSWORD=$(gen_password)
 GRAFANA_ADMIN_PASSWORD=$(gen_password)
 OIDC_SECRET_GRAFANA=$(gen_secret)
@@ -65,7 +64,6 @@ OIDC_SECRET_ARGOCD=$(gen_secret)
 ARGOCD_SERVER_SECRET=$(gen_secret)
 
 echo "Generated passwords:"
-echo "  - Keycloak admin password"
 echo "  - Keycloak DB password"
 echo "  - Grafana admin password"
 echo "  - OIDC client secret (Grafana)"
@@ -83,8 +81,7 @@ sed -i "s|hosted-zone-id: REPLACE_ME|hosted-zone-id: ${AWS_HOSTED_ZONE_ID}|" "$S
 sed -i "s|# AGE-SECRET-KEY-REPLACE_ME|${SOPS_AGE_KEY}|" "$SECRETS_FILE"
 
 # Replace generated secrets
-# Keycloak
-sed -i "s|admin-password: REPLACE_ME|admin-password: ${KEYCLOAK_ADMIN_PASSWORD}|" "$SECRETS_FILE"
+# Keycloak DB
 sed -i "s|db-password: REPLACE_ME|db-password: ${KEYCLOAK_DB_PASSWORD}|" "$SECRETS_FILE"
 
 # Postgres (must match keycloak db-password)

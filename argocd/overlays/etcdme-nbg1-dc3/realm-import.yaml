@@ -193,17 +193,5 @@ spec:
         - name: user
           description: Regular user role
 
-    users:
-      - username: admin
-        enabled: true
-        emailVerified: true
-        email: contact@sofianedjerbi.com
-        credentials:
-          - type: password
-            value: "$(secret:keycloak-secrets:admin-password)"
-            temporary: true
-        realmRoles:
-          - admin
-
     defaultRoles:
       - user
