@@ -32,8 +32,8 @@ spec:
           pass-authorization-header: "true"
           set-authorization-header: "true"
           set-xauthrequest: "true"
-        existingSecret: n8n-oauth2-proxy
-        proxyVarsAsSecrets: false
+        config:
+          existingSecret: n8n-oauth2-proxy
         service:
           type: ClusterIP
           portNumber: 4180
