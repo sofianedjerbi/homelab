@@ -17,6 +17,9 @@ spec:
         # Disable embedded PostgreSQL
         postgresql:
           enabled: false
+        # Use PostgreSQL database type
+        db:
+          type: postgresdb
         # External PostgreSQL configuration
         externalPostgresql:
           host: postgres-rw.postgres.svc.cluster.local
