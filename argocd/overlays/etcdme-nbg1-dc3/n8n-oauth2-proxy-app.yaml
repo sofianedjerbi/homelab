@@ -18,6 +18,7 @@ spec:
         config:
           clientID: n8n
           cookieSecret: ""  # Will be set from existingSecret
+          existingSecret: n8n-oauth2-proxy
         extraArgs:
           provider: keycloak-oidc
           oidc-issuer-url: https://auth.etcd.me/realms/homelab
@@ -32,8 +33,6 @@ spec:
           pass-authorization-header: "true"
           set-authorization-header: "true"
           set-xauthrequest: "true"
-        config:
-          existingSecret: n8n-oauth2-proxy
         service:
           type: ClusterIP
           portNumber: 4180
