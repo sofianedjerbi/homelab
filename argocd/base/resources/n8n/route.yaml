@@ -9,7 +9,8 @@ metadata:
 spec:
   parentRefs:
     - name: main-gateway
-      namespace: cilium-gateway
+      namespace: default
+      sectionName: https
   hostnames:
     - n8n.cluster.local
   rules:
