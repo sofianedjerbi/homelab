@@ -47,6 +47,15 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
+        # Probe configuration - give n8n more time to start
+        livenessProbe:
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          periodSeconds: 30
+        readinessProbe:
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+          periodSeconds: 10
   destination:
     server: https://kubernetes.default.svc
     namespace: n8n
