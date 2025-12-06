@@ -15,11 +15,11 @@ unit "cluster" {
     cluster_name = local.cluster_name
     hcloud_token = get_env("HCLOUD_TOKEN")
 
-    # Control plane nodes (3 for HA)
+    # Control plane nodes (3x CX33 for HA with adequate resources)
     control_plane_nodepools = [
       {
         name     = "control-plane"
-        type     = "cx23"
+        type     = "cx33"
         location = "nbg1"
         count    = 3
       }
