@@ -19,3 +19,14 @@ patches:
       - op: replace
         path: /spec/listeners/2/hostname
         value: argo.etcd.me
+
+  # Patch Certificate dnsNames for etcd.me domain
+  - target:
+      kind: Certificate
+      name: wildcard-tls
+    patch: |
+      - op: replace
+        path: /spec/dnsNames
+        value:
+          - "*.etcd.me"
+          - etcd.me

@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - gateway-class.yaml
   - main-gateway.yaml
+  - certificate.yaml
