@@ -22,7 +22,8 @@ resources:
   - resources/keycloak/instance.yaml
   - resources/keycloak/realm-import.yaml
   - resources/keycloak/route.yaml
-  # n8n resources (jobs, routes)
+  # n8n resources (namespace, jobs, routes)
+  - resources/n8n/namespace.yaml
   - resources/n8n/keycloak-secret-sync.yaml
   - resources/n8n/postgres-init.yaml
   - resources/n8n/route.yaml
