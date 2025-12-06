@@ -5,10 +5,10 @@ resources:
   - ../../../../base/resources/routes
 
 patches:
-  # Patch TLSRoute hostname for ArgoCD
+  # Patch HTTPRoute hostname for ArgoCD (TLS terminated at Gateway, re-encrypted to backend)
   - target:
-      kind: TLSRoute
-      name: argocd-tls-route
+      kind: HTTPRoute
+      name: argocd-route
     patch: |
       - op: replace
         path: /spec/hostnames/0

@@ -16,7 +16,7 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
-    # Wildcard HTTPS - TLS termination for most apps
+    # Wildcard HTTPS - TLS termination for all apps
     - name: https
       protocol: HTTPS
       port: 443
@@ -26,16 +26,6 @@ spec:
         certificateRefs:
           - name: wildcard-tls
             kind: Secret
-      allowedRoutes:
-        namespaces:
-          from: All
-    # ArgoCD - TLS passthrough (ArgoCD handles its own TLS for gRPC)
-    - name: argocd-passthrough
-      protocol: TLS
-      port: 443
-      hostname: argo.cluster.local
-      tls:
-        mode: Passthrough
       allowedRoutes:
         namespaces:
           from: All

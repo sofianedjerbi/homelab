@@ -1,7 +1,7 @@
-apiVersion: gateway.networking.k8s.io/v1alpha2
-kind: TLSRoute
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: argocd-tls-route
+  name: argocd-route
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
@@ -11,7 +11,7 @@ spec:
   parentRefs:
     - name: main-gateway
       namespace: default
-      sectionName: argocd-passthrough
+      sectionName: https
   rules:
     - backendRefs:
         - name: argocd-server

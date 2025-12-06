@@ -16,9 +16,6 @@ patches:
       - op: replace
         path: /spec/listeners/1/hostname
         value: "*.etcd.me"
-      - op: replace
-        path: /spec/listeners/2/hostname
-        value: argo.etcd.me
 
   # Patch Certificate dnsNames for etcd.me domain
   - target:
