@@ -7,9 +7,8 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
     # Image updater: auto-update when new images are pushed
-    argocd-image-updater.argoproj.io/image-list: landing=ghcr.io/sofianedjerbi/homelanding
+    argocd-image-updater.argoproj.io/image-list: landing=ghcr.io/sofianedjerbi/homelanding:latest
     argocd-image-updater.argoproj.io/landing.update-strategy: digest
-    argocd-image-updater.argoproj.io/landing.allow-tags: regexp:^latest$
 spec:
   project: default
   source:
