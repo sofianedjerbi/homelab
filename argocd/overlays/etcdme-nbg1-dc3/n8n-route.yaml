@@ -1,0 +1,36 @@
+# n8n HTTPRoute - routes through oauth2-proxy with SSO logout support
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: n8n-route
+  namespace: n8n
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  parentRefs:
+    - name: main-gateway
+      namespace: default
+      sectionName: https
+  hostnames:
+    - n8n.etcd.me
+  rules:
+    # SSO logout: redirect /signout to oauth2-proxy -> Keycloak logout chain
+    - matches:
+        - path:
+            type: Exact
+            value: /signout
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: /oauth2/sign_out?rd=https%3A%2F%2Fauth.etcd.me%2Frealms%2Fhomelab%2Fprotocol%2Fopenid-connect%2Flogout%3Fclient_id%3Dn8n
+            statusCode: 302
+    # All other requests go to oauth2-proxy
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: n8n-oauth2-proxy
+          port: 4180

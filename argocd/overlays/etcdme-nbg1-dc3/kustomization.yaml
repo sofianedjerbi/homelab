@@ -102,29 +102,6 @@ patches:
         path: /spec/hostname/hostname
         value: auth.etcd.me
 
-  # n8n route - hostname + SSO logout redirect
-  - target:
-      kind: HTTPRoute
-      name: n8n-route
-    patch: |
-      - op: replace
-        path: /spec/hostnames/0
-        value: n8n.etcd.me
-      - op: add
-        path: /spec/rules/0
-        value:
-          matches:
-            - path:
-                type: Exact
-                value: /signout
-          filters:
-            - type: RequestRedirect
-              requestRedirect:
-                path:
-                  type: ReplaceFullPath
-                  replaceFullPath: /oauth2/sign_out?rd=https%3A%2F%2Fauth.etcd.me%2Frealms%2Fhomelab%2Fprotocol%2Fopenid-connect%2Flogout%3Fclient_id%3Dn8n
-                statusCode: 302
-
 # Files that are too complex to patch - override entirely
   - path: realm-import.yaml
   - path: loki-stack-app.yaml
@@ -132,3 +109,4 @@ patches:
   - path: cluster-issuer.yaml
   - path: n8n-app.yaml
   - path: n8n-oauth2-proxy-app.yaml
+  - path: n8n-route.yaml
