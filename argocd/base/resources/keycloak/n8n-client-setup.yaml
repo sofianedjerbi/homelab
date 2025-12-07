@@ -3,7 +3,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: keycloak-n8n-client-setup
+  name: keycloak-n8n-client-init
   namespace: keycloak
   annotations:
     argocd.argoproj.io/sync-wave: "4"
