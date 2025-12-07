@@ -31,9 +31,11 @@ spec:
         existingEncryptionKeySecret: n8n-encryption
         # Timezone
         timezone: Europe/Paris
-        # Disable n8n built-in auth (oauth2-proxy handles it)
-        extraEnvVars:
-          N8N_USER_MANAGEMENT_DISABLED: "true"
+        # Main container config
+        main:
+          # Disable n8n built-in auth (oauth2-proxy handles it)
+          extraEnvVars:
+            N8N_USER_MANAGEMENT_DISABLED: "true"
         # Ingress disabled (using gateway)
         ingress:
           enabled: false
