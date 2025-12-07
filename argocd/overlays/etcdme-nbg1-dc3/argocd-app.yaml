@@ -26,10 +26,13 @@ spec:
               clientID: argocd
               enablePKCEAuthentication: true
               requestedScopes: ["openid", "profile", "email", "groups"]
+              usernameClaim: preferred_username
+              groupsClaim: groups
           rbac:
             policy.default: role:readonly
             policy.csv: |
               g, admin, role:admin
+              g, Administrator, role:admin
           secret:
             # Use externally managed secret (no OIDC client secret needed with PKCE)
             createSecret: false
