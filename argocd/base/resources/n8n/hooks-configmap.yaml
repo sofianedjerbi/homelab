@@ -40,11 +40,10 @@ data:
 
             const layer = new Layer('/', { strict: false, end: false }, async (req, res, next) => {
               try {
-                // Intercept logout endpoints for full SSO logout (before n8n's handler)
-                // n8n uses /rest/logout (API) and /signout (page)
-                const isLogout = req.url === '/rest/logout' || req.url.startsWith('/rest/logout?') ||
-                                 req.url === '/signout' || req.url.startsWith('/signout?');
-                if (isLogout) {
+                // Intercept /signout page navigation for full SSO logout
+                // Note: /rest/logout is an XHR API call - let n8n handle it normally
+                // The frontend navigates to /signout after the API call
+                if (req.url === '/signout' || req.url.startsWith('/signout?')) {
                   res.clearCookie(cookieName, { path: '/' });
                   const keycloakLogout = process.env.N8N_KEYCLOAK_LOGOUT_URL || '';
                   if (keycloakLogout) {
