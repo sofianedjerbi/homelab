@@ -1,4 +1,5 @@
-# Uptime Kuma HTTPRoute
+# Uptime Kuma HTTPRoute with anonymous status page viewing
+# Public paths go directly to uptime-kuma, admin paths through oauth2-proxy
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -14,10 +15,65 @@ spec:
   hostnames:
     - uptime.cluster.local
   rules:
+    # Public status pages (anonymous viewing)
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /status
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # Public API for status pages
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/status-page
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # Public assets
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /assets
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # Public uploads (status page icons)
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /upload
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # Favicon and icons
+    - matches:
+        - path:
+            type: Exact
+            value: /icon.svg
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    - matches:
+        - path:
+            type: Exact
+            value: /favicon.ico
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    - matches:
+        - path:
+            type: Exact
+            value: /manifest.json
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # All other paths require authentication via oauth2-proxy
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: uptime-kuma
-          port: 3001
+        - name: uptime-kuma-oauth2-proxy
+          port: 4180

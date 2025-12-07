@@ -27,6 +27,7 @@ resources:
   - apps/n8n/oauth2-proxy.yaml
   # Uptime Kuma
   - apps/uptime-kuma/uptime-kuma.yaml
+  - apps/uptime-kuma/oauth2-proxy.yaml
   # Resources (only those NOT managed by child apps)
   - resources/cert-manager/cluster-issuer.yaml
   # Keycloak via operator CRDs (no child app for these)

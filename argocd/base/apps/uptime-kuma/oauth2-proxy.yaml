@@ -1,0 +1,55 @@
+# oauth2-proxy for Uptime Kuma authentication via Keycloak
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: uptime-kuma-oauth2-proxy
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  source:
+    repoURL: https://oauth2-proxy.github.io/manifests
+    chart: oauth2-proxy
+    targetRevision: 7.12.6
+    helm:
+      valuesObject:
+        replicaCount: 1
+        config:
+          clientID: uptime-kuma
+          cookieSecret: ""  # Will be set from existingSecret
+          existingSecret: uptime-kuma-oauth2-proxy
+        extraArgs:
+          provider: keycloak-oidc
+          oidc-issuer-url: https://auth.cluster.local/realms/homelab
+          oidc-extra-audience: account
+          code-challenge-method: S256
+          email-domain: "*"
+          cookie-secure: "true"
+          upstream: "http://uptime-kuma.uptime-kuma.svc.cluster.local:3001"
+          http-address: "0.0.0.0:4180"
+          reverse-proxy: "true"
+          skip-provider-button: "true"
+          pass-access-token: "true"
+          pass-authorization-header: "true"
+          set-authorization-header: "true"
+          set-xauthrequest: "true"
+        service:
+          type: ClusterIP
+          portNumber: 4180
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 64Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: uptime-kuma
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,4 +1,5 @@
-# Uptime Kuma HTTPRoute - cluster-specific with domain
+# Uptime Kuma HTTPRoute with anonymous status page viewing - etcd.me overlay
+# Public paths go directly to uptime-kuma, admin paths through oauth2-proxy
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -14,10 +15,77 @@ spec:
   hostnames:
     - uptime.etcd.me
   rules:
+    # Public status pages (anonymous viewing)
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /status
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # Public API for status pages
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/status-page
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # Public assets
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /assets
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # Public uploads (status page icons)
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /upload
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # Favicon and icons
+    - matches:
+        - path:
+            type: Exact
+            value: /icon.svg
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    - matches:
+        - path:
+            type: Exact
+            value: /favicon.ico
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    - matches:
+        - path:
+            type: Exact
+            value: /manifest.json
+      backendRefs:
+        - name: uptime-kuma
+          port: 3001
+    # SSO logout: redirect /signout to oauth2-proxy -> Keycloak logout chain
+    - matches:
+        - path:
+            type: Exact
+            value: /signout
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            path:
+              type: ReplaceFullPath
+              replaceFullPath: /oauth2/sign_out?rd=https%3A%2F%2Fauth.etcd.me%2Frealms%2Fhomelab%2Fprotocol%2Fopenid-connect%2Flogout%3Fclient_id%3Duptime-kuma
+            statusCode: 302
+    # All other paths require authentication via oauth2-proxy
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: uptime-kuma
-          port: 3001
+        - name: uptime-kuma-oauth2-proxy
+          port: 4180

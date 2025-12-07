@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ../../base
   - n8n-client-setup.yaml
+  - uptime-kuma-client-setup.yaml
 
 # KSOPS generator for SOPS-encrypted secrets
 # ArgoCD decrypts via KSOPS plugin, kubectl skips this
@@ -110,4 +111,5 @@ patches:
   - path: n8n-app.yaml
   - path: n8n-oauth2-proxy-app.yaml
   - path: n8n-route.yaml
+  - path: uptime-kuma-oauth2-proxy-app.yaml
   - path: uptime-kuma-route.yaml
