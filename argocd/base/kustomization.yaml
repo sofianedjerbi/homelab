@@ -25,6 +25,8 @@ resources:
   # n8n apps
   - apps/n8n/n8n.yaml
   - apps/n8n/oauth2-proxy.yaml
+  # Uptime Kuma
+  - apps/uptime-kuma/uptime-kuma.yaml
   # Resources (only those NOT managed by child apps)
   - resources/cert-manager/cluster-issuer.yaml
   # Keycloak via operator CRDs (no child app for these)
@@ -39,5 +41,7 @@ resources:
   - resources/n8n/keycloak-secret-sync.yaml
   - resources/n8n/postgres-init.yaml
   - resources/n8n/route.yaml
+  # Uptime Kuma resources
+  - resources/uptime-kuma/route.yaml
   # All secrets are in overlay secrets.sops.yaml
   # NOTE: gateway, postgres/cluster, and routes are managed by child apps
