@@ -1,0 +1,15 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: postgres-daily-backup
+  namespace: postgres
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  # Daily backup at 2 AM UTC
+  schedule: "0 2 * * *"
+  backupOwnerReference: self
+  cluster:
+    name: postgres
+  # Start first backup immediately after creation
+  immediate: true

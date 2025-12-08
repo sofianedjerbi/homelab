@@ -6,9 +6,9 @@ vars:
 
 tasks:
   generate-secrets:
-    desc: Generate secrets file (requires AWS_* and SOPS_AGE_KEY env vars)
+    desc: Generate secrets file (requires AWS_* and SOPS_AGE_KEY env vars). Use -- --update to preserve existing passwords.
     cmds:
-      - ./tasks/scripts/generate-secrets.sh {{.OVERLAY}}
+      - ./tasks/scripts/generate-secrets.sh {{.CLI_ARGS}} {{.OVERLAY}}
 
   bootstrap:
     desc: Bootstrap ArgoCD (run once after cluster creation)

@@ -35,4 +35,25 @@ spec:
     limits:
       cpu: 500m
       memory: 512Mi
+
+  # S3 Backup configuration
+  # Placeholders are replaced by generate-secrets.sh from .env values
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://etcdme/postgres
+      endpointURL: https://s3.eu-central-003.backblazeb2.com
+      s3Credentials:
+        accessKeyId:
+          name: s3-backup-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: s3-backup-credentials
+          key: ACCESS_SECRET_KEY
+      wal:
+        compression: gzip
+        maxParallel: 2
+      data:
+        compression: gzip
+    retentionPolicy: "30d"
   # Secret postgres-credentials is defined in overlay secrets.sops.yaml
+  # Secret s3-backup-credentials is defined in overlay secrets.sops.yaml
