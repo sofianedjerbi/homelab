@@ -105,6 +105,53 @@ EOF
     fi
   fi
 
+  # Compare example file to find missing secrets and add them
+  if [[ -f "$EXAMPLE_FILE" ]]; then
+    echo "Checking for new secrets in example file..."
+
+    # Extract all secret names from example file (handles indentation)
+    example_secrets=$(grep -E "^\s*name:" "$EXAMPLE_FILE" | grep -v "app.kubernetes.io" | sed 's/.*name:\s*//' | sort -u)
+
+    for secret_name in $example_secrets; do
+      if ! grep -q "name: ${secret_name}$" "$SECRETS_FILE"; then
+        echo "  - Adding missing secret: $secret_name"
+
+        # Extract the YAML block for this secret using awk
+        # Looks for blocks starting with "apiVersion:" or "---" and containing "name: $secret_name"
+        secret_block=$(awk -v target="$secret_name" '
+          BEGIN { collecting=0; block="" }
+          /^---$/ || /^apiVersion:/ {
+            if (collecting && found) { print block }
+            block = (/^---$/) ? "" : $0 "\n"
+            collecting = 1
+            found = 0
+            next
+          }
+          collecting {
+            block = block $0 "\n"
+            if ($0 ~ "name: " target "$") { found = 1 }
+          }
+          END { if (collecting && found) print block }
+        ' "$EXAMPLE_FILE")
+
+        # Replace placeholder passwords with generated ones
+        if [[ -n "$secret_block" ]]; then
+          modified_block="$secret_block"
+
+          # Find all unique REPLACE_ placeholders and replace each with a unique password
+          placeholders=$(echo "$modified_block" | grep -oE 'REPLACE_[A-Z_]+' | sort -u)
+          for placeholder in $placeholders; do
+            new_password=$(gen_password)
+            modified_block="${modified_block//$placeholder/$new_password}"
+          done
+
+          echo "---" >> "$SECRETS_FILE"
+          printf "%s" "$modified_block" >> "$SECRETS_FILE"
+        fi
+      fi
+    done
+  fi
+
   echo ""
 
 # FULL GENERATION MODE
@@ -129,6 +176,8 @@ else
   UPTIME_KUMA_CLIENT_SECRET=$(gen_password)
   UPTIME_KUMA_COOKIE_SECRET=$(gen_password)
   UPTIME_KUMA_ADMIN_PASSWORD=$(gen_password)
+  PLAYWRIGHT_MCP_TOKEN=$(gen_password)
+  FILESTASH_CLIENT_SECRET=$(gen_password)
 
   echo "Generated passwords:"
   echo "  - Keycloak DB password"
@@ -141,6 +190,8 @@ else
   echo "  - Uptime Kuma OAuth client secret"
   echo "  - Uptime Kuma cookie secret"
   echo "  - Uptime Kuma admin password"
+  echo "  - Playwright MCP token"
+  echo "  - Filestash client secret"
   echo ""
 
   # Copy example and replace values
@@ -183,6 +234,12 @@ else
     sed -i "s|ACCESS_SECRET_KEY: REPLACE_S3_BACKUP_SECRET_KEY|ACCESS_SECRET_KEY: ${S3_BACKUP_SECRET_ACCESS_KEY}|" "$SECRETS_FILE"
     echo "  - S3 backup credentials"
   fi
+
+  # Playwright MCP token
+  sed -i "s|token: REPLACE_PLAYWRIGHT_MCP_TOKEN|token: ${PLAYWRIGHT_MCP_TOKEN}|" "$SECRETS_FILE"
+
+  # Filestash client secret
+  sed -i "s|client-secret: REPLACE_FILESTASH_CLIENT_SECRET|client-secret: ${FILESTASH_CLIENT_SECRET}|" "$SECRETS_FILE"
 fi
 
 echo -e "${GREEN}Secrets file updated: ${SECRETS_FILE}${NC}"

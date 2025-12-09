@@ -1,0 +1,90 @@
+# Job to create filestash client in Keycloak - etcd.me overlay
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: keycloak-filestash-client-init
+  namespace: keycloak
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: setup
+          image: quay.io/keycloak/keycloak:26.0
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+
+              # Wait for Keycloak to be ready (retry login)
+              for i in $(seq 1 30); do
+                if /opt/keycloak/bin/kcadm.sh config credentials \
+                  --server http://keycloak-service.keycloak.svc.cluster.local:8080 \
+                  --realm master \
+                  --user "$KEYCLOAK_ADMIN" \
+                  --password "$KEYCLOAK_ADMIN_PASSWORD" 2>/dev/null; then
+                  echo "Logged in to Keycloak"
+                  break
+                fi
+                echo "Waiting for Keycloak... ($i/30)"
+                sleep 5
+              done
+
+              # Verify login worked
+              /opt/keycloak/bin/kcadm.sh config credentials \
+                --server http://keycloak-service.keycloak.svc.cluster.local:8080 \
+                --realm master \
+                --user "$KEYCLOAK_ADMIN" \
+                --password "$KEYCLOAK_ADMIN_PASSWORD"
+
+              # Check if client already exists
+              if /opt/keycloak/bin/kcadm.sh get clients -r homelab -q clientId=filestash | grep -q '"clientId" : "filestash"'; then
+                echo "filestash client already exists, updating..."
+                CLIENT_ID=$(/opt/keycloak/bin/kcadm.sh get clients -r homelab -q clientId=filestash --fields id | grep -o '"id" : "[^"]*"' | cut -d'"' -f4)
+                /opt/keycloak/bin/kcadm.sh update clients/$CLIENT_ID -r homelab \
+                  -s "secret=$FILESTASH_CLIENT_SECRET" \
+                  -s 'redirectUris=["https://drive.etcd.me/api/session/auth/openid/callback"]' \
+                  -s 'webOrigins=["https://drive.etcd.me"]' \
+                  -s 'attributes={"post.logout.redirect.uris":"https://drive.etcd.me/*"}'
+                echo "Client updated"
+              else
+                echo "Creating filestash client..."
+                /opt/keycloak/bin/kcadm.sh create clients -r homelab \
+                  -s clientId=filestash \
+                  -s name="Filestash Drive" \
+                  -s enabled=true \
+                  -s publicClient=false \
+                  -s clientAuthenticatorType=client-secret \
+                  -s "secret=$FILESTASH_CLIENT_SECRET" \
+                  -s 'redirectUris=["https://drive.etcd.me/api/session/auth/openid/callback"]' \
+                  -s 'webOrigins=["https://drive.etcd.me"]' \
+                  -s standardFlowEnabled=true \
+                  -s directAccessGrantsEnabled=false \
+                  -s protocol=openid-connect \
+                  -s 'attributes={"post.logout.redirect.uris":"https://drive.etcd.me/*"}'
+                echo "filestash client created"
+              fi
+
+              echo "Done!"
+          env:
+            - name: KEYCLOAK_ADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-initial-admin
+                  key: username
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-initial-admin
+                  key: password
+            - name: FILESTASH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: filestash-client-secret
+                  key: client-secret
