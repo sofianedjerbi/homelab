@@ -34,6 +34,8 @@ spec:
           pass-authorization-header: "true"
           set-authorization-header: "true"
           set-xauthrequest: "true"
+          # Allow webhooks without authentication
+          skip-auth-regex: "^/(webhook|webhook-test|healthz)/.*"
         service:
           type: ClusterIP
           portNumber: 4180
