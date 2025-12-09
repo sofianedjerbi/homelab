@@ -49,6 +49,11 @@ replacements:
           name: argocd-routes
         fieldPaths:
           - spec.source.repoURL
+      - select:
+          kind: Application
+          name: playwright-mcp
+        fieldPaths:
+          - spec.source.repoURL
   - source:
       kind: ConfigMap
       name: cluster-config

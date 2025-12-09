@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: playwright-mcp
+  namespace: playwright-mcp
+  labels:
+    app: playwright-mcp
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8931
+      targetPort: 8931
+      protocol: TCP
+      name: sse
+  selector:
+    app: playwright-mcp

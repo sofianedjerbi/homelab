@@ -1,0 +1,23 @@
+# Playwright MCP Server - Browser automation for LLMs
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: playwright-mcp
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  project: default
+  source:
+    repoURL: REPO_URL_PLACEHOLDER
+    targetRevision: HEAD
+    path: argocd/base/resources/playwright-mcp
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: playwright-mcp
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

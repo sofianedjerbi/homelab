@@ -32,6 +32,8 @@ resources:
   - apps/uptime-kuma/uptime-kuma.yaml
   # Landing page
   - apps/landing/landing.yaml
+  # Playwright MCP server
+  - apps/playwright-mcp/playwright-mcp.yaml
   # Resources (only those NOT managed by child apps)
   - resources/cert-manager/cluster-issuer.yaml
   # Keycloak via operator CRDs (no child app for these)

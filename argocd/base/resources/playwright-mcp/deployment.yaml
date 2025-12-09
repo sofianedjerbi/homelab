@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playwright-mcp
+  namespace: playwright-mcp
+  labels:
+    app: playwright-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playwright-mcp
+  template:
+    metadata:
+      labels:
+        app: playwright-mcp
+    spec:
+      containers:
+        - name: playwright-mcp
+          image: mcr.microsoft.com/playwright/mcp
+          imagePullPolicy: Always
+          command: ["node"]
+          args:
+            - "cli.js"
+            - "--headless"
+            - "--browser"
+            - "chromium"
+            - "--no-sandbox"
+            - "--port"
+            - "8931"
+            - "--host"
+            - "0.0.0.0"
+          ports:
+            - containerPort: 8931
+              name: sse
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8931
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8931
+            initialDelaySeconds: 5
+            periodSeconds: 10
