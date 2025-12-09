@@ -26,7 +26,7 @@ spec:
               mountPath: /app/data/state
         - name: config-generator
           image: node:20-alpine
-          command: ['node', '/scripts/generate-config.js']
+          command: ['sh', '-c', 'npm install --prefix /tmp bcryptjs 2>/dev/null && NODE_PATH=/tmp/node_modules node /scripts/generate-config.js']
           env:
             - name: CONFIG_PATH
               value: /app/data/state/config/config.json

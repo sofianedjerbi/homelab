@@ -52,16 +52,10 @@ data:
       return result.toString('base64url');
     }
 
-    // Simple bcrypt-compatible hash using native crypto
-    // Filestash just needs a hashed password it can verify
+    // Hash password using bcrypt (requires bcryptjs to be installed)
     function hashPassword(password) {
-      // Use scrypt for password hashing (bcrypt alternative)
-      const salt = crypto.randomBytes(16);
-      const hash = crypto.scryptSync(password, salt, 64);
-      // Format as bcrypt-like string that Filestash can parse
-      // Actually Filestash uses bcrypt, so we need proper bcrypt
-      // For simplicity, use a placeholder - user can change via UI
-      return '$2a$10$' + crypto.randomBytes(22).toString('base64').slice(0, 22) + crypto.createHash('sha256').update(password).digest('base64').slice(0, 31);
+      const bcrypt = require('bcryptjs');
+      return bcrypt.hashSync(password, 10);
     }
 
     async function main() {
