@@ -136,3 +136,4 @@ patches:
   - path: n8n-route.yaml
   - path: uptime-kuma-route.yaml
   - path: landing-app.yaml
+  - path: filestash-oauth2-proxy-app.yaml

@@ -106,13 +106,11 @@ data:
     			if json.Unmarshal(data, &existing) == nil {
     				general, _ := existing["general"].(map[string]interface{})
     				auth, _ := existing["auth"].(map[string]interface{})
-    				middleware, _ := existing["middleware"].(map[string]interface{})
 
     				hostCorrect := general != nil && general["host"] == applicationURL
     				hasAdmin := auth != nil && auth["admin"] != nil
-    				hasMiddleware := middleware != nil && middleware["identity_provider"] != nil
 
-    				if hostCorrect && hasAdmin && hasMiddleware {
+    				if hostCorrect && hasAdmin {
     					fmt.Println("Config already properly configured, skipping generation")
     					return
     				}
@@ -164,29 +162,8 @@ data:
     		fmt.Println("Admin password configured")
     	}
 
-    	// Add OIDC middleware
-    	oidcClientID := os.Getenv("OIDC_CLIENT_ID")
-    	oidcClientSecret := os.Getenv("OIDC_CLIENT_SECRET")
-    	oidcConfigURL := os.Getenv("OIDC_CONFIG_URL")
-
-    	if oidcClientID != "" && oidcClientSecret != "" && oidcConfigURL != "" {
-    		oidcParams := map[string]string{
-    			"client_id":     oidcClientID,
-    			"client_secret": oidcClientSecret,
-    			"config_url":    oidcConfigURL,
-    			"scope":         "openid profile email",
-    		}
-    		jsonBytes, _ := json.Marshal(oidcParams)
-    		encryptedParams := Encrypt(secretKey, jsonBytes)
-
-    		config["middleware"] = map[string]interface{}{
-    			"identity_provider": map[string]interface{}{
-    				"type":   "openid",
-    				"params": encryptedParams,
-    			},
-    		}
-    		fmt.Println("OIDC authentication configured")
-    	}
+    	// Note: Authentication is handled by oauth2-proxy in front of Filestash
+    	// No native OIDC middleware configuration needed
 
     	// Add S3 backend
     	s3Endpoint := os.Getenv("S3_ENDPOINT")

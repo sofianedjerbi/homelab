@@ -43,15 +43,7 @@ spec:
                 secretKeyRef:
                   name: filestash-config
                   key: admin-password
-            - name: OIDC_CLIENT_ID
-              value: filestash
-            - name: OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: filestash-config
-                  key: oidc-client-secret
-            - name: OIDC_CONFIG_URL
-              value: "OIDC_CONFIG_URL_PLACEHOLDER"
+            # OIDC handled by oauth2-proxy - no native OIDC config needed
             - name: S3_ENDPOINT
               valueFrom:
                 secretKeyRef:

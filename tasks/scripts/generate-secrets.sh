@@ -197,6 +197,7 @@ else
   FILESTASH_CLIENT_SECRET=$(gen_password)
   FILESTASH_SECRET_KEY=$(gen_password)
   FILESTASH_ADMIN_PASSWORD=$(gen_password)
+  FILESTASH_COOKIE_SECRET=$(gen_password)
 
   echo "Generated passwords:"
   echo "  - Keycloak DB password"
@@ -213,6 +214,7 @@ else
   echo "  - Filestash client secret"
   echo "  - Filestash secret key"
   echo "  - Filestash admin password"
+  echo "  - Filestash cookie secret"
   echo ""
 
   # Copy example and replace values
@@ -264,6 +266,7 @@ else
   sed -i "s|oidc-client-secret: REPLACE_FILESTASH_CLIENT_SECRET|oidc-client-secret: ${FILESTASH_CLIENT_SECRET}|" "$SECRETS_FILE"
   sed -i "s|secret-key: REPLACE_FILESTASH_SECRET_KEY|secret-key: ${FILESTASH_SECRET_KEY}|" "$SECRETS_FILE"
   sed -i "s|admin-password: REPLACE_FILESTASH_ADMIN_PASSWORD|admin-password: ${FILESTASH_ADMIN_PASSWORD}|" "$SECRETS_FILE"
+  sed -i "s|cookie-secret: REPLACE_FILESTASH_COOKIE_SECRET|cookie-secret: ${FILESTASH_COOKIE_SECRET}|" "$SECRETS_FILE"
 
   # Filestash S3 backend (optional - from .env)
   if [[ -n "${FILESTASH_S3_ENDPOINT:-}" ]]; then
