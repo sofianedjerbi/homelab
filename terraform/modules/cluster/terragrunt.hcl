@@ -1,6 +1,10 @@
 # Cluster module unit
 # Deploys Kubernetes cluster on Hetzner Cloud using terraform-hcloud-kubernetes
 
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
 terraform {
   source = "./"
 

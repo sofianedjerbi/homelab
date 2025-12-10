@@ -1,6 +1,10 @@
 # DNS module unit
 # Manages Route53 DNS records
 
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
 dependency "cluster" {
   config_path = values.cluster_path
 
