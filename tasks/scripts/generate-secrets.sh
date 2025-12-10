@@ -150,7 +150,7 @@ EOF
           END { if (collecting && found) print block }
         ' "$EXAMPLE_FILE")
 
-        # Replace placeholder passwords with generated ones
+        # Replace placeholder passwords with generated ones (or reuse existing values)
         if [[ -n "$secret_block" ]]; then
           modified_block="$secret_block"
 
@@ -158,8 +158,28 @@ EOF
           # Note: pattern includes digits for placeholders like S3_ENDPOINT
           placeholders=$(echo "$modified_block" | grep -oE 'REPLACE_[A-Z0-9_]+' | sort -ru)
           for placeholder in $placeholders; do
-            new_password=$(gen_password)
-            modified_block="${modified_block//$placeholder/$new_password}"
+            # Check if this placeholder value already exists in the secrets file
+            # This ensures shared secrets (like client-secret used by multiple resources) stay consistent
+            existing_value=""
+            case "$placeholder" in
+              REPLACE_FILESTASH_CLIENT_SECRET)
+                existing_value=$(grep -A1 "name: filestash-client-secret" "$SECRETS_FILE" | grep "client-secret:" | sed 's/.*client-secret: //' | head -1)
+                ;;
+              REPLACE_N8N_CLIENT_SECRET)
+                existing_value=$(grep -A1 "name: n8n-client-secret" "$SECRETS_FILE" | grep "client-secret:" | sed 's/.*client-secret: //' | head -1)
+                ;;
+              REPLACE_UPTIME_KUMA_CLIENT_SECRET)
+                existing_value=$(grep -A1 "name: uptime-kuma-client-secret" "$SECRETS_FILE" | grep "client-secret:" | sed 's/.*client-secret: //' | head -1)
+                ;;
+            esac
+
+            if [[ -n "$existing_value" && "$existing_value" != "REPLACE_"* ]]; then
+              modified_block="${modified_block//$placeholder/$existing_value}"
+              echo "    (reusing existing value for $placeholder)"
+            else
+              new_password=$(gen_password)
+              modified_block="${modified_block//$placeholder/$new_password}"
+            fi
           done
 
           echo "---" >> "$SECRETS_FILE"
