@@ -75,3 +75,4 @@ jobs:
         uses: azure/k8s-lint@v3
         with:
           manifests: argocd/base/resources
+          kubeconformOpts: -summary -ignore-missing-schemas

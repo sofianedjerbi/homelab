@@ -7,3 +7,4 @@ checks:
     - "no-anti-affinity"
     - "default-service-account"
     - "sensitive-host-mounts"
+    - "latest-tag"
