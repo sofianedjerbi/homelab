@@ -31,7 +31,7 @@
   },
   "shell": {
     "init_hook": [
-      "if [ -f .env ]; then set -a; source .env; set +a; fi",
+      "[ -f .env ] && set -a && source .env && set +a || true",
       "echo 'Loaded DevBox env for Homelab'"
     ],
     "scripts": {
