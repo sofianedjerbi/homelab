@@ -31,7 +31,12 @@
   },
   "shell": {
     "init_hook": [
+      "if [ -f .env ]; then set -a; source .env; set +a; fi",
       "echo 'Loaded DevBox env for Homelab'"
-    ]
+    ],
+    "scripts": {
+      "s3-state": "stu --bucket \"$TF_STATE_BUCKET\"",
+      "s3-backup": "AWS_ACCESS_KEY_ID=\"$S3_BACKUP_ACCESS_KEY_ID\" AWS_SECRET_ACCESS_KEY=\"$S3_BACKUP_SECRET_ACCESS_KEY\" stu --endpoint-url \"$S3_BACKUP_ENDPOINT\" --bucket \"$S3_BACKUP_BUCKET\""
+    }
   }
 }
