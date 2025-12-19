@@ -26,6 +26,8 @@ spec:
           code-challenge-method: S256
           email-domain: "*"
           whitelist-domain: ".etcd.me"
+          # Allow webhooks without authentication (required for n8n webhook nodes)
+          skip-auth-regex: "^/(webhook|webhook-test|healthz)/.*"
           cookie-secure: "true"
           upstream: "http://n8n.n8n.svc.cluster.local:5678"
           http-address: "0.0.0.0:4180"
