@@ -209,7 +209,7 @@ spec:
 
               echo "Updating n8n-mcp-auth secret..."
               kubectl patch secret n8n-mcp-auth -n n8n-mcp --type='json' \
-                -p="[{\"op\": \"replace\", \"path\": \"/data/n8n-api-key\", \"value\": \"$API_KEY_B64\"}]"
+                -p="[{\"op\": \"add\", \"path\": \"/data/n8n-api-key\", \"value\": \"$API_KEY_B64\"}]"
 
               echo "Restarting n8n-mcp deployment..."
               kubectl rollout restart deployment/n8n-mcp -n n8n-mcp || true

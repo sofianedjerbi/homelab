@@ -49,6 +49,7 @@ resources:
   - resources/n8n/namespace.yaml
   - resources/n8n/keycloak-secret-sync.yaml
   - resources/n8n/postgres-init.yaml
+  - resources/n8n/api-key-init.yaml
   - resources/n8n/route.yaml
   # Uptime Kuma resources
   - resources/uptime-kuma/route.yaml
