@@ -16,8 +16,9 @@ spec:
 
   # Storage - using Longhorn for persistence
   storage:
-    size: 5Gi
+    size: 10Gi
     storageClass: longhorn
+    resizeInUseVolumes: true
 
   # Bootstrap with initial databases
   bootstrap:
