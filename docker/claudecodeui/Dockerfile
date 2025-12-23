@@ -19,8 +19,12 @@ WORKDIR /app
 
 # Clone and build Claude Code UI
 RUN git clone --depth 1 https://github.com/siteboon/claudecodeui.git . \
-    && npm ci \
-    && npm run build
+    && npm ci
+
+# Fix: Override vite config with process.env polyfill for browser compatibility
+COPY vite.config.js ./vite.config.js
+
+RUN npm run build
 
 # Create directories for persistent data
 RUN mkdir -p /home/node/.claude /data \
