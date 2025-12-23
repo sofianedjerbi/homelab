@@ -21,8 +21,9 @@ WORKDIR /app
 RUN git clone --depth 1 https://github.com/siteboon/claudecodeui.git . \
     && npm ci
 
-# Fix: Override vite config with process.env polyfill for browser compatibility
+# Fix: Override vite config and index.html with process polyfill for browser compatibility
 COPY vite.config.js ./vite.config.js
+COPY index.html ./index.html
 
 RUN npm run build
 

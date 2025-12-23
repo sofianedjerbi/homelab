@@ -8,9 +8,10 @@ export default defineConfig(({ command, mode }) => {
   return {
     plugins: [react()],
     // Fix: Define process.env for browser compatibility
-    // Some dependencies reference process.env which doesn't exist in browsers
+    // Some dependencies reference process.env.NODE_ENV which doesn't exist in browsers
     define: {
-      'process.env': {}
+      'process.env.NODE_ENV': JSON.stringify(mode),
+      'process.env': '{}'
     },
     server: {
       port: parseInt(env.VITE_PORT) || 5173,
