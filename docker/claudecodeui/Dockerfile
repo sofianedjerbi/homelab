@@ -1,11 +1,14 @@
 # Claude Code UI - Web interface for Claude Code CLI
 FROM node:20-slim
 
-# Install dependencies for Claude CLI and terminal emulation
+# Install dependencies for Claude CLI, terminal emulation (node-pty), and native builds
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     ca-certificates \
+    python3 \
+    make \
+    g++ \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Claude CLI globally
